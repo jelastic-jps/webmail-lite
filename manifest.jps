@@ -1,0 +1,76 @@
+{
+  "jpsVersion": "0.3",
+  "jpsType": "install",
+  "name": "WebMail Lite",
+  "version": "8.1.12",
+  "logo": "https://github.com/jelastic-jps/webmail-lite/raw/master/images/webmail.png",
+  "homepage": "https://afterlogic.org/download/webmail-lite-php",
+  "description": "WebMail Lite is Fast and easy-to-use webmail front-end for your existing POP3/IMAP mail server.\r\n\r\nWebMail Lite can be used to access mail on virtually any POP3 or IMAP enabled mail server.\r\n\r\nThe integrated web administration panel allows you to manage the system settings without manual editing config files. ",
+  "globals": {
+    "DB_PASS": "${fn.random}",
+    "CONFIG_PATH": "/var/www/webroot/ROOT/data/settings/config.json"
+  },
+  "env": {
+    "topology": {
+      "engine": "php7.0",
+      "nodes": [
+        {
+          "cloudlets": 8,
+          "nodeType": "nginxphp"
+        },
+        {
+          "nodeType": "mysql5",
+          "cloudlets": 8
+        }
+      ]
+    }
+  },
+  "onInstall": [
+    {
+      "deploy": {
+        "archive": "https://github.com/jelastic-jps/webmail-lite/raw/master/dumps/Webmail-lite-8-1-12.zip",
+        "name": "Webmail-lite.zip",
+        "context": "ROOT"
+      }
+    },
+    {
+      "upload [cp]": {
+        "sourcePath": "https://raw.githubusercontent.com/jelastic-jps/webmail-lite/master/configs/config.json",
+        "destPath": "/var/www/webroot/ROOT/data/settings/config.json"
+      }
+    },
+    {
+      "prepareSqlDatabase": [
+        {
+          "nodeGroup": "sqldb",
+          "loginCredentials": {
+            "user": "root",
+            "password": "${nodes.sqldb.password}"
+          },
+          "newDatabaseName": "webmail_lite",
+          "newDatabaseUser": {
+            "name": "webmail_lite",
+            "password": "${globals.DB_PASS}"
+          }
+        }
+      ]
+    },
+    {
+      "replaceInFile": {
+        "nodeType": "nginxphp",
+        "path": "${globals.CONFIG_PATH}",
+        "replacements": [
+          {
+            "pattern": "{DB_HOST}",
+            "replacement": "${nodes.sqldb.address}"
+          },
+          {
+            "pattern": "{PASSWORD}",
+            "replacement": "${globals.DB_PASS}"
+          }
+        ]
+      }
+    }
+  ],
+  "success": "Below you will find your admin panel link, username and password.</br></br> <table style='font-size:13px; border: none;'><tr><td>Admin panel URL:</td><td style='padding-left: 10px;'><a href='${env.protocol}://${env.domain}/' target='_blank'>${env.protocol}://${env.domain}/</a></td></tr>  <tr><td>Admin name:</td><td style='padding-left: 10px;'>superdmin</td></tr><tr><td>Password:</td><td style='padding-left: 10px;'><i>empty text</i></td></tr></table></br>To add custom domain name for your Webmail Lite installation follow the steps described in our <a href='http://docs.jelastic.com/custom-domains' target='_blank'>documentation</a>"
+}
