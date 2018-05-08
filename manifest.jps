@@ -34,7 +34,8 @@
       }
     },
     {
-      "upload [cp]": {
+      "upload": {
+        "nodeType": "nginxphp",
         "sourcePath": "https://raw.githubusercontent.com/jelastic-jps/webmail-lite/master/configs/config.json",
         "destPath": "/var/www/webroot/ROOT/data/settings/config.json"
       }
