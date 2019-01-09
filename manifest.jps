@@ -3,6 +3,9 @@
   "jpsType": "install",
   "name": "WebMail Lite",
   "version": "8.1.12",
+  "categories": [
+    "apps/content-management"
+  ],
   "logo": "https://github.com/jelastic-jps/webmail-lite/raw/master/images/webmail.png",
   "homepage": "https://afterlogic.org/download/webmail-lite-php",
   "description": "WebMail Lite is Fast and easy-to-use webmail front-end for your existing POP3/IMAP mail server.\r\n\r\nWebMail Lite can be used to access mail on virtually any POP3 or IMAP enabled mail server.\r\n\r\nThe integrated web administration panel allows you to manage the system settings without manual editing config files. ",
