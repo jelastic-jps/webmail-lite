@@ -4,7 +4,7 @@
   "name": "WebMail Lite",
   "version": "8.1.12",
   "categories": [
-    "apps/content-management"
+    "apps/project-management"
   ],
   "logo": "https://github.com/jelastic-jps/webmail-lite/raw/master/images/webmail.png",
   "homepage": "https://afterlogic.org/download/webmail-lite-php",
