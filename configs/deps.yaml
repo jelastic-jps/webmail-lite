@@ -8,5 +8,5 @@ tags:
       version: 8.0.21
   nginxphp:
     nginxphp:
-      digest: sha256:75da750613fb969cba1faac7b69903769afc38829d2a26dd26b5e05932a26791
+      digest: sha256:6f0f7638d8afe89e073e03c3dd3c720c159ff65579d69827a68b222e96daf7b6
       version: 1.18.0-php-7.4.10
