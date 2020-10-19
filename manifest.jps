@@ -1,23 +1,27 @@
-version: 0.3
+version: 1.7
 type: install
 id: webmail
 name: WebMail Lite
+
 categories: 
 - apps/project-management
+
 baseUrl: https://raw.githubusercontent.com/jelastic-jps/webmail-lite/master/
 logo: images/webmail.png
 homepage: https://afterlogic.org/download/webmail-lite-php
+
+mixins:
+- config/vers.yaml
+
 description: |
-  WebMail Lite is Fast and easy-to-use webmail front-end for your existing
-  POP3/IMAP mail server.  
-  WebMail Lite can be used to access mail on virtually
-  any POP3 or IMAP enabled mail server.  
-  The integrated web administration panel
-  allows you to manage the system settings without manual editing config files.
+  WebMail Lite is Fast and easy-to-use webmail front-end for your existing POP3/IMAP mail server.  
+  WebMail Lite can be used to access mail on virtually any POP3 or IMAP enabled mail server.  
+  The integrated web administration panel allows you to manage the system settings without manual editing config files.
+ 
 globals:
   DB_PASS: "${fn.random}"
-  CONFIG_PATH: "/var/www/webroot/ROOT/data/settings/config.json"
-engine: php7.0
+  CONFIG_PATH: /var/www/webroot/ROOT/data/settings/config.json
+
 nodes:
 - cloudlets: 8
   nodeType: nginxphp
@@ -26,8 +30,8 @@ nodes:
 
 onInstall:
 - deploy:
-    archive: ${baseUrl}dumps/Webmail-lite-8-1-12.zip
-    name: Webmail-lite-8.1.12.zip
+    archive: https://github.com/afterlogic/webmail-lite-8/archive/${globals.version_webmail-lite}.zip
+    name: Webmail-lite-${globals.version_webmail-lite}.zip
     context: ROOT
 - upload:
     nodeType: nginxphp
