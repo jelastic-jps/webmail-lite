@@ -10,9 +10,6 @@ baseUrl: https://raw.githubusercontent.com/jelastic-jps/webmail-lite/master/
 logo: images/webmail.png
 homepage: https://afterlogic.org/download/webmail-lite-php
 
-mixins:
-- config/vers.yaml
-
 description: |
   WebMail Lite is Fast and easy-to-use webmail front-end for your existing POP3/IMAP mail server.  
   WebMail Lite can be used to access mail on virtually any POP3 or IMAP enabled mail server.  
@@ -30,13 +27,14 @@ nodes:
 
 onInstall:
 - deploy:
-    archive: https://github.com/afterlogic/webmail-lite-8/archive/${globals.version_webmail-lite}.zip
-    name: Webmail-lite-${globals.version_webmail-lite}.zip
+    archive: https://afterlogic.org/download/webmail_php.zip
+    name: Webmail-lite.zip
     context: ROOT
+- cmd [cp]: rm ${globals.CONFIG_PATH}
 - upload:
     nodeType: nginxphp
     sourcePath: ${baseUrl}configs/config.json
-    destPath: "/var/www/webroot/ROOT/data/settings/config.json"
+    destPath: ${globals.CONFIG_PATH}
 - prepareSqlDatabase:
   - nodeGroup: sqldb
     loginCredentials:
