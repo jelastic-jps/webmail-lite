@@ -22,6 +22,7 @@ globals:
 nodes:
 - cloudlets: 8
   nodeType: nginxphp
+  engine: php7.4
 - nodeType: mysql5
   cloudlets: 8
 
