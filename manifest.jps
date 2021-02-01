@@ -17,7 +17,12 @@ description: |
  
 globals:
   DB_PASS: "${fn.random}"
+  ADMIN_PASS: ${fn.password}
+  ROOT: /var/www/webroot/ROOT/
   CONFIG_PATH: /var/www/webroot/ROOT/data/settings/config.json
+
+mixins:
+  - configs/vers.yaml
 
 nodes:
 - cloudlets: 8
@@ -28,14 +33,43 @@ nodes:
 
 onInstall:
 - deploy:
-    archive: https://afterlogic.org/download/webmail_php.zip
-    name: Webmail-lite.zip
+    archive: https://github.com/afterlogic/webmail-lite-8/archive/${globals.version_webmail-lite}.zip
+    name: Webmail-lite-${globals.version_webmail-lite}.zip
     context: ROOT
-- cmd [cp]: rm ${globals.CONFIG_PATH}
-- upload:
-    nodeType: nginxphp
-    sourcePath: ${baseUrl}configs/config.json
-    destPath: ${globals.CONFIG_PATH}
+- cmd [cp]: 
+    user: root
+    commands: |-
+      cd ${globals.ROOT}
+      yum install -y npm
+  
+- cmd [cp]: |-
+    cd ${globals.ROOT}
+    curl -fsSL "https://getcomposer.org/composer-1.phar" -o composer.phar
+    php composer.phar install
+    php composer.phar run pre-config
+
+- cmd [cp]: 
+    user: root
+    commands: |-
+      cd ${globals.ROOT}
+      npm install
+      npm install -g n
+      npm install --global gulp-cli
+      n -p 8.17.0
+- cmd [cp]: |-
+    cd ${globals.ROOT}
+    gulp js:min
+    gulp styles --themes Default,DeepForest,Funny,Sand
+    echo "<?php
+      include 'system/Api.php';
+      include_once 'system/autoload.php';
+      \Aurora\System\Api::InitSalt();
+      echo crypt('${globals.ADMIN_PASS}', \Aurora\System\Api::\$sSalt);
+    ?>" > ${globals.ROOT}/generatePassword.php
+    password=$(php ${globals.ROOT}/generatePassword.php)
+    out=$(sed -z 's|dminPassword"\: \[\n        \"\"|dminPassword"\: \[\n        \"'$password'\"|' ${globals.CONFIG_PATH})
+    echo $out > ${globals.CONFIG_PATH}
+    rm ${globals.ROOT}/generatePassword.php
 - prepareSqlDatabase:
   - nodeGroup: sqldb
     loginCredentials:
@@ -59,6 +93,6 @@ success: |
   
   Admin panel URL: [${env.protocol}://${env.domain}/](${env.protocol}://${env.domain}/)  
   Admin name: superadmin  
-  Password: empty text  
+  Password: ${globals.ADMIN_PASS}  
   
   To add custom domain name for your Webmail Lite installation follow the steps described in our [documentation](http://docs.jelastic.com/custom-domains)
