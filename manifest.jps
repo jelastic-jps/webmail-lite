@@ -79,14 +79,15 @@ onInstall:
     newDatabaseUser:
       name: webmail_lite
       password: "${globals.DB_PASS}"
-- replaceInFile:
-    nodeType: nginxphp
-    path: "${globals.CONFIG_PATH}"
-    replacements:
-    - pattern: "{DB_HOST}"
-      replacement: "${nodes.sqldb.address}"
-    - pattern: "{PASSWORD}"
-      replacement: "${globals.DB_PASS}"
+- cmd [cp]: |-
+
+    sed -ri "s|\"DBHost\"\: \[.\"[^\"]*\", \"string\"|\"DBHost\"\: \[ \"${nodes.sqldb.address}\", \"string\"|" ${globals.CONFIG_PATH}
+    sed -ri "s|\"DBName\"\: \[.\"[^\"]*\"|\"DBName\": [ \"webmail_lite\"|g" ${globals.CONFIG_PATH}
+    sed -ri "s|\"DBLogin\"\: \[.\"[^\"]*\"|\"DBLogin\": [ \"webmail_lite\"|g" ${globals.CONFIG_PATH}
+    sed -ri "s|\"DBPassword\": \[.\"[^\"]*\"|\"DBPassword\": [ \"${globals.DB_PASS}\"|g" ${globals.CONFIG_PATH}
+- cmd[cp]: sed -ri "s|location \/ \{|location ^~ /data {  deny all; }\n        location \/ \{|g" /etc/nginx/nginx.conf
+  user: root
+- restartNodes[cp]
 
 success: |
   Below you will find your admin panel link, username and password.
