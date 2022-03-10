@@ -80,7 +80,9 @@ onInstall:
       name: webmail_lite
       password: "${globals.DB_PASS}"
 - cmd [cp]: |-
-
+    sed -ri "s|ContentSecurityPolicy[^],]*|ContentSecurityPolicy\": [ \"default-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; img-src * data: blob:; frame-src *; font-src 'self' data:\"|g" ${globals.CONFIG_PATH}
+    sed -ri "s|add_header Content-Security-Policy(.*)|#add_header Content-Security-Policy\1|g" /etc/nginx/conf.d/headers/10-shared_headers.conf
+    sed -ri "s|add_header Cross-Origin-Opener-Policy(.*)|#add_header Cross-Origin-Opener-Policy\1|g" /etc/nginx/conf.d/headers/10-shared_headers.conf
     sed -ri "s|\"DBHost\"\: \[.\"[^\"]*\", \"string\"|\"DBHost\"\: \[ \"${nodes.sqldb.address}\", \"string\"|" ${globals.CONFIG_PATH}
     sed -ri "s|\"DBName\"\: \[.\"[^\"]*\"|\"DBName\": [ \"webmail_lite\"|g" ${globals.CONFIG_PATH}
     sed -ri "s|\"DBLogin\"\: \[.\"[^\"]*\"|\"DBLogin\": [ \"webmail_lite\"|g" ${globals.CONFIG_PATH}
