@@ -27,14 +27,14 @@ mixins:
 nodes:
 - cloudlets: 8
   nodeType: nginxphp
-  engine: php7.4
+  engine: php8.0
 - nodeType: mysql5
   cloudlets: 8
 
 onInstall:
 - deploy:
-    archive: https://github.com/afterlogic/webmail-lite-8/archive/${globals.version_webmail-lite}.zip
-    name: Webmail-lite-${globals.version_webmail-lite}.zip
+    archive: https://afterlogic.org/download/webmail_php.zip
+    name: webmail_php.zip
     context: ROOT
 - cmd [cp]: 
     user: root
@@ -44,9 +44,10 @@ onInstall:
   
 - cmd [cp]: |-
     cd ${globals.ROOT}
-    curl -fsSL "https://getcomposer.org/composer-1.phar" -o composer.phar
-    php composer.phar install
-    php composer.phar run pre-config
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    php composer-setup.php
+    php -r "unlink('composer-setup.php');"
 
 - cmd [cp]: 
     user: root
@@ -55,7 +56,7 @@ onInstall:
       npm install
       npm install -g n
       npm install --global gulp-cli
-      n -p 8.17.0
+      n -p 17.9.1
 - cmd [cp]: |-
     cd ${globals.ROOT}
     gulp js:min
@@ -94,7 +95,7 @@ onInstall:
 success: |
   Below you will find your admin panel link, username and password.
   
-  Admin panel URL: [${env.protocol}://${env.domain}/](${env.protocol}://${env.domain}/)  
+  Admin panel URL: [${env.protocol}://${env.domain}/adminpanel/](${env.protocol}://${env.domain}/adminpanel/)  
   Admin name: superadmin  
   Password: ${globals.ADMIN_PASS}  
   
