@@ -33,7 +33,7 @@ nodes:
 
 onInstall:
 - deploy:
-    archive: https://afterlogic.org/download/webmail_php.zip
+    archive: https://github.com/afterlogic/webmail-lite-8/archive/latest.zip
     name: webmail_php.zip
     context: ROOT
 - cmd [cp]: 
@@ -48,29 +48,48 @@ onInstall:
     php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
     php composer-setup.php
     php -r "unlink('composer-setup.php');"
+    
+    sed -i "s|0.9.x|dev-master|g" composer.json
+    sed -i "s|0.9.124|dev-master|g" composer.json
+    curl -fsSL "https://raw.githubusercontent.com/afterlogic/webmail-lite-8/master/package.json" -o package.json
+    curl -fsSL "https://raw.githubusercontent.com/afterlogic/webmail-lite-8/master/composer.json" -o composer.json
+    php composer.phar update
+    php composer.phar install
+
+- cmd [cp]: 
+    user: root
+    commands: |-
+      cd ${globals.ROOT}
+      npm install -g npm@9.7.1
 
 - cmd [cp]: 
     user: root
     commands: |-
       cd ${globals.ROOT}
       npm install
-      npm install -g n
-      npm install --global gulp-cli
-      n -p 17.9.1
+      cd modules/AdminPanelWebclient/vue
+      npm install
+      #n -p 16.14.0
+      npm install -g @quasar/cli
+      
 - cmd [cp]: |-
     cd ${globals.ROOT}
-    gulp js:min
-    gulp styles --themes Default,DeepForest,Funny,Sand
+    npm run styles:build --themes=Default,DefaultDark,DeepForest,Funny,Sand
+    npm run js:build
+    npm run js:min
     echo "<?php
       include 'system/Api.php';
       include_once 'system/autoload.php';
+      include_once('modules/AdminAuth/Module.php');
       \Aurora\System\Api::InitSalt();
-      echo crypt('${globals.ADMIN_PASS}', \Aurora\System\Api::\$sSalt);
+      echo crypt('${globals.ADMIN_PASS}', \Aurora\System\Api::GetHashSalt());
     ?>" > ${globals.ROOT}/generatePassword.php
     password=$(php ${globals.ROOT}/generatePassword.php)
     out=$(sed -z 's|dminPassword"\: \[\n        \"\"|dminPassword"\: \[\n        \"'$password'\"|' ${globals.CONFIG_PATH})
     echo $out > ${globals.CONFIG_PATH}
     rm ${globals.ROOT}/generatePassword.php
+    cd modules/AdminPanelWebclient/vue
+    npm run build-production
 - prepareSqlDatabase:
   - nodeGroup: sqldb
     loginCredentials:
