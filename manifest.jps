@@ -27,7 +27,7 @@ mixins:
 nodes:
 - cloudlets: 8
   nodeType: nginxphp
-  engine: php8.0
+  engine: php8.2
 - nodeType: mysql8
   cloudlets: 8
 
@@ -47,8 +47,9 @@ onInstall:
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     php composer-setup.php
     php -r "unlink('composer-setup.php');"
-    sed -i "s|0.9.x|dev-master|g" composer.json
+    sed -i "s|0\.9\.[^\"\s]*|dev-master|g" composer.json
     sed -i "s|^1.0|^2.0|g" composer.json
+    curl -fsSL "https://raw.githubusercontent.com/afterlogic/webmail-lite-8/master/package.json" -o package.json
     php composer.phar update
 
 - cmd [cp]: |-
@@ -57,6 +58,7 @@ onInstall:
     npm install -g npm@9.7.1
     cd modules/AdminPanelWebclient/vue
     npm install -g @quasar/cli
+    npm install underscore
   user: root
       
 - cmd [cp]: |-
