@@ -25,7 +25,7 @@ mixins:
   - configs/vers.yaml
 
 nodes:
-- cloudlets: 8
+- cloudlets: 16
   nodeType: nginxphp
   engine: php8.2
 - nodeType: mysql8
@@ -66,17 +66,9 @@ onInstall:
     npm run styles:build --themes=Default,DefaultDark,DeepForest,Funny,Sand
     npm run js:build
     npm run js:min
-    echo "<?php
-      include 'system/Api.php';
-      include_once 'system/autoload.php';
-      include_once('modules/AdminAuth/Module.php');
-      \Aurora\System\Api::InitSalt();
-      echo crypt('${globals.ADMIN_PASS}', \Aurora\System\Api::GetHashSalt());
-    ?>" > ${globals.ROOT}/generatePassword.php
-    password=$(php ${globals.ROOT}/generatePassword.php)
+    password=$(php -r "echo password_hash('${globals.ADMIN_PASS}', PASSWORD_DEFAULT) . PHP_EOL;")
     out=$(sed -z 's|dminPassword"\: \[\n        \"\"|dminPassword"\: \[\n        \"'$password'\"|' ${globals.CONFIG_PATH})
     echo $out > ${globals.CONFIG_PATH}
-    rm ${globals.ROOT}/generatePassword.php
     cd modules/AdminPanelWebclient/vue
     npm run build-production
 
