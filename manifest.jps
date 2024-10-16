@@ -33,7 +33,7 @@ nodes:
 
 onInstall:
 - deploy:
-    archive: https://github.com/afterlogic/webmail-lite-8/archive/${globals.version_webmail-lite}.zip
+    archive: https://github.com/afterlogic/webmail-lite-8/archive/latest.zip
     name: webmail_php.zip
     context: ROOT
 
@@ -41,13 +41,6 @@ onInstall:
     MYSQL_PWD=${nodes.mysql8.password} mysql -uroot -e "CREATE DATABASE webmail_lite;"
     MYSQL_PWD=${nodes.mysql8.password} mysql -uroot -e "CREATE USER 'webmail_lite'@'%' IDENTIFIED BY '${globals.DB_PASS}';"
     MYSQL_PWD=${nodes.mysql8.password} mysql -uroot -e "GRANT ALL PRIVILEGES ON webmail_lite.* TO 'webmail_lite'@'%' WITH GRANT OPTION;"
-
-
-- cmd [cp]: 
-    user: root
-    commands: |-
-      cd ${globals.ROOT}
-      yum install -y npm
   
 - cmd [cp]: |-
     cd ${globals.ROOT}
@@ -55,27 +48,16 @@ onInstall:
     php composer-setup.php
     php -r "unlink('composer-setup.php');"
     sed -i "s|0.9.x|dev-master|g" composer.json
-    sed -i "s|0.9.124|dev-master|g" composer.json
-    curl -fsSL "https://raw.githubusercontent.com/afterlogic/webmail-lite-8/master/package.json" -o package.json
-    curl -fsSL "https://raw.githubusercontent.com/afterlogic/webmail-lite-8/master/composer.json" -o composer.json
+    sed -i "s|^1.0|^2.0|g" composer.json
     php composer.phar update
-    php composer.phar install
 
-- cmd [cp]: 
-    user: root
-    commands: |-
-      cd ${globals.ROOT}
-      npm install -g npm@9.7.1
-
-- cmd [cp]: 
-    user: root
-    commands: |-
-      cd ${globals.ROOT}
-      npm install
-      cd modules/AdminPanelWebclient/vue
-      npm install
-      #n -p 16.14.0
-      npm install -g @quasar/cli
+- cmd [cp]: |-
+    cd ${globals.ROOT}
+    yum install -y npm
+    npm install -g npm@9.7.1
+    cd modules/AdminPanelWebclient/vue
+    npm install -g @quasar/cli
+  user: root
       
 - cmd [cp]: |-
     cd ${globals.ROOT}
