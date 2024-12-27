@@ -91,4 +91,4 @@ success: |
   **Admin name:** superadmin  
   **Admin password:** ${globals.ADMIN_PASS}
   
-  To add custom domain name for your WebMail Lite installation follow the steps described in our [documentation](https://www.virtuozzo.com/application-platform-docs/custom-domains/).
+  To add a custom domain name for your WebMail Lite installation, follow the steps described in our [documentation](https://www.virtuozzo.com/application-platform-docs/custom-domains/).
