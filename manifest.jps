@@ -11,8 +11,9 @@ logo: images/webmail.png
 homepage: https://afterlogic.org/download/webmail-lite-php
 
 description: |
-  WebMail Lite is fast and easy-to-use webmail front-end for your existing IMAP mail server. WebMail Lite can be used to access mail on virtually any IMAP enabled mail server.
-  The integrated web administration panel allows you to manage the system settings without manual editing configuration files.
+  WebMail Lite is fast and easy-to-use webmail front-end for your existing IMAP mail server. WebMail Lite can be used to access mail on virtually any IMAP-enabled mail server.
+  
+  The integrated web administration panel allows you to manage the system settings without manually editing configuration files.
  
 globals:
   DB_PASS: "${fn.password(10)}"
@@ -84,10 +85,10 @@ onInstall:
 - restartNodes[cp]
 
 success: |
-  Below you will find your admin panel link, username and password.
+  Use the following credentials to access the WebMail Lite admin panel:
   
-  Admin panel URL: [${env.protocol}://${env.domain}/adminpanel/](${env.protocol}://${env.domain}/adminpanel/)  
-  Admin name: superadmin  
-  Password: ${globals.ADMIN_PASS}  
+  **Admin panel URL:** [${env.protocol}://${env.domain}/adminpanel/](${env.protocol}://${env.domain}/adminpanel/)  
+  **Admin name:** superadmin  
+  **Password:** ${globals.ADMIN_PASS}
   
   To add custom domain name for your WebMail Lite installation follow the steps described in our [documentation](https://www.virtuozzo.com/application-platform-docs/custom-domains/).

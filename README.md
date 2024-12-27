@@ -4,7 +4,7 @@
 
 # WebMail Lite
 
-The package deploys the [WebMail Lite](https://afterlogic.org/download/webmail-lite-php) solution - an open-source, fast and easy-to-use webmail front-end for your existing IMAP mail server. WebMail Lite can be used to access mail on virtually any IMAP enabled mail server.
+The package deploys the [WebMail Lite](https://afterlogic.org/download/webmail-lite-php) solution - an open-source, fast and easy-to-use webmail front-end for your existing IMAP mail server. WebMail Lite can be used to access mail on virtually any IMAP-enabled mail server.
 
 
 ## Environment Topology
