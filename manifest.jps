@@ -89,6 +89,6 @@ success: |
   
   **Admin panel URL:** [${env.protocol}://${env.domain}/adminpanel/](${env.protocol}://${env.domain}/adminpanel/)  
   **Admin name:** superadmin  
-  **Password:** ${globals.ADMIN_PASS}
+  **Admin password:** ${globals.ADMIN_PASS}
   
   To add custom domain name for your WebMail Lite installation follow the steps described in our [documentation](https://www.virtuozzo.com/application-platform-docs/custom-domains/).
