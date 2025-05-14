@@ -24,6 +24,9 @@ globals:
 mixins:
   - configs/vers.yaml
 
+ssl: true
+skipNodeEmails: true
+
 nodes:
 - cloudlets: 16
   nodeType: nginxphp
