@@ -6,7 +6,7 @@ name: WebMail Lite
 categories: 
 - apps/project-management
 
-baseUrl: https://raw.githubusercontent.com/jelastic-jps/webmail-lite/master/
+baseUrl: https://cdn.jsdelivr.net/gh/jelastic-jps/webmail-lite@master/
 logo: images/webmail.png
 homepage: https://afterlogic.org/download/webmail-lite-php
 
