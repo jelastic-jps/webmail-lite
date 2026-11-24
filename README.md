@@ -11,9 +11,9 @@ The package deploys the [WebMail Lite](https://afterlogic.org/download/webmail-l
 
 This package creates a dedicated WebMail Lite environment that contains one application server and one database container. It automatically deploys and sets the WebMail Lite application. The automatic vertical scaling is enabled out of the box, and [horizontal scaling](https://www.virtuozzo.com/application-platform-docs/automatic-horizontal-scaling/) can be configured (if needed). The default software stacks utilized in the package are the following:
 
-- NGINX PHP application server (PHP 8.2)
+- NGINX PHP application server (PHP 8.3)
 - MySQL 8 database
-- WebMail Lite 8.5.3
+- WebMail Lite (latest release)
 
 
 ## Deployment to Cloud
