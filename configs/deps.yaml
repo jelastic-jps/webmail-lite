@@ -1,5 +1,0 @@
-templates:
-  mysql:
-    - ^mysql5$
-  nginxphp:
-    - ^nginxphp
